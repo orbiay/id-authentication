@@ -56,4 +56,11 @@ public class InternalAuthRequestValidator extends AuthRequestValidator {
 		// Skip for internal auth
 	}
 
+	/*
+	* THIS METHOD ADDED BY MI
+	* */
+//	protected void validateDigitalIdTimestamp(DigitalId digitalId, Errors errors, String format) {
+//		// Skip for internal auth
+//
+//	}
 }
