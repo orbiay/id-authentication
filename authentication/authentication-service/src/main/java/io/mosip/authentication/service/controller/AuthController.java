@@ -64,7 +64,7 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @RestController
 @Tag(name = "auth-controller", description = "Auth Controller")
-@SecurityScheme(in = SecuritySchemeIn.HEADER, scheme = "basic", type = SecuritySchemeType.APIKEY, name = "Authorization")
+//@SecurityScheme(in = SecuritySchemeIn.HEADER, scheme = "basic", type = SecuritySchemeType.APIKEY, name = "Authorization")
 public class AuthController {
 
 	/** The mosipLogger. */
@@ -115,15 +115,15 @@ public class AuthController {
 	 */
 	@PostMapping(path = "/auth/{MISP-LK}/{Auth-Partner-ID}/{API-Key}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Authenticate Request", description = "Authenticate Request", tags = { "auth-controller" })
-	@SecurityRequirement(name = "Authorization")
-	@Parameter(in = ParameterIn.HEADER, name = "signature")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Request authenticated successfully",
-					content = @Content(array = @ArraySchema(schema = @Schema(implementation = IdAuthenticationAppException.class)))),
-			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
+//	@SecurityRequirement(name = "Authorization")
+//	@Parameter(in = ParameterIn.HEADER, name = "signature")
+//	@ApiResponses(value = {
+//			@ApiResponse(responseCode = "200", description = "Request authenticated successfully",
+//					content = @Content(array = @ArraySchema(schema = @Schema(implementation = IdAuthenticationAppException.class)))),
+//			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+//			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+//			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+//			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public AuthResponseDTO authenticateIndividual(@Validated @RequestBody AuthRequestDTO authrequestdto,
 			@ApiIgnore Errors errors, @PathVariable("MISP-LK") String mispLK, @PathVariable("Auth-Partner-ID") String partnerId,
 			@PathVariable("API-Key") String partnerApiKey, HttpServletRequest request)
@@ -131,7 +131,7 @@ public class AuthController {
 		
 		if(request instanceof ObjectWithMetadata) {
 			ObjectWithMetadata requestWithMetadata = (ObjectWithMetadata) request;
-		
+		System.out.println(authrequestdto.toString() +  "request is " +  request.toString());
 			boolean isAuth = true;
 			Optional<PartnerDTO> partner = partnerService.getPartner(partnerId, authrequestdto.getMetadata());
 			AuthTransactionBuilder authTxnBuilder = authTransactionHelper

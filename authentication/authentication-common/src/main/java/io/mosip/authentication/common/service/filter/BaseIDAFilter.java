@@ -363,6 +363,7 @@ public abstract class BaseIDAFilter implements Filter {
 
 		String id = fetchId(requestWrapper, IdAuthConfigKeyConstants.MOSIP_IDA_API_ID);
 		requestWrapper.resetInputStream();
+		// OUSSAMA COMMENT THIS
 		if (Objects.nonNull(requestBody) && !requestBody.isEmpty()) {
 			validateId(requestBody, id);
 			validateVersion(requestBody);

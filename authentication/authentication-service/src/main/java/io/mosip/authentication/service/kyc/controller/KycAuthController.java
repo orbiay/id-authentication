@@ -161,7 +161,8 @@ public class KycAuthController {
 			ObjectWithMetadata requestWrapperWithMetadata = (ObjectWithMetadata) request;
 
 			boolean isAuth = true;
-			Optional<PartnerDTO> partner = partnerService.getPartner(partnerId, ekycAuthRequestDTO.getMetadata());
+			mispLK = "SDqKzRZr6CXTFIDs4Geo3hyaY8NbzyvB7EOo4qj03vmCIgyQwN";
+			Optional<PartnerDTO> partner = partnerService.getPartner("mpartner-default-esignet", ekycAuthRequestDTO.getMetadata());
 			AuthTransactionBuilder authTxnBuilder = authTransactionHelper
 					.createAndSetAuthTxnBuilderMetadataToRequest(ekycAuthRequestDTO, !isAuth, partner);
 			
