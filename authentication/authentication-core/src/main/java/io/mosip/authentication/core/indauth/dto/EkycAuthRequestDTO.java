@@ -1,6 +1,7 @@
 package io.mosip.authentication.core.indauth.dto;
 
 import java.util.List;
+import java.util.Map;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

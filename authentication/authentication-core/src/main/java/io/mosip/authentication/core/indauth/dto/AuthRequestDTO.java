@@ -32,3 +32,4 @@ public class AuthRequestDTO extends BaseAuthRequestDTO implements ObjectWithMeta
 	private Map<String, Object> metadata;
 
 }
+

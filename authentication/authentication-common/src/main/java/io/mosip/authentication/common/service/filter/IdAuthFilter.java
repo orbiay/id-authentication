@@ -146,6 +146,7 @@ public abstract class IdAuthFilter extends BaseAuthFilter {
 		try {
 			if (null != requestBody.get(REQUEST)) {
 				requestBody.replace(REQUEST, decode((String) requestBody.get(REQUEST)));
+				requestBody.replace(REQUEST, (String) requestBody.get(REQUEST));
 				if (null == requestBody.get(REQUEST_HMAC)) {
 					throwMissingInputParameter(REQUEST_HMAC);
 				} else {

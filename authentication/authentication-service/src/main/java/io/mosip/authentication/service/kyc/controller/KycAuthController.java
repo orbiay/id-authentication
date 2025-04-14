@@ -161,8 +161,8 @@ public class KycAuthController {
 			ObjectWithMetadata requestWrapperWithMetadata = (ObjectWithMetadata) request;
 
 			boolean isAuth = true;
-			mispLK = "SDqKzRZr6CXTFIDs4Geo3hyaY8NbzyvB7EOo4qj03vmCIgyQwN";
 			Optional<PartnerDTO> partner = partnerService.getPartner("mpartner-default-esignet", ekycAuthRequestDTO.getMetadata());
+
 			AuthTransactionBuilder authTxnBuilder = authTransactionHelper
 					.createAndSetAuthTxnBuilderMetadataToRequest(ekycAuthRequestDTO, !isAuth, partner);
 			
@@ -225,6 +225,70 @@ public class KycAuthController {
 	 * @throws IdAuthenticationAppException      the id authentication app exception
 	 * @throws IdAuthenticationDaoException      the id authentication dao exception
 	 */
+//	@PostMapping(path = "/ky-test/Test/{IdP-LK}/{Auth-Partner-ID}/{OIDC-Client-Id}")
+//	public KycAuthResponseDTO processKycAuthTest(@RequestBody KycAuthRequestDTO authRequestDTO,
+//			@ApiIgnore Errors errors, @PathVariable("IdP-LK") String mispLK, @PathVariable("Auth-Partner-ID") String partnerId,
+//			@PathVariable("OIDC-Client-Id") String oidcClientId, HttpServletRequest request)
+//			throws IdAuthenticationBusinessException, IdAuthenticationAppException, IdAuthenticationDaoException {
+//		mosipLogger.info("Checking instance type of request: " + request.getClass().getName());
+//
+//		if(request instanceof ObjectWithMetadata) {
+//			ObjectWithMetadata requestWrapperWithMetadata = (ObjectWithMetadata) request;
+//
+//			boolean isAuth = true;
+//			Optional<PartnerDTO> partner = partnerService.getPartner(partnerId, authRequestDTO.getMetadata());
+//			AuthTransactionBuilder authTxnBuilder = authTransactionHelper
+//					.createAndSetAuthTxnBuilderMetadataToRequest(authRequestDTO, !isAuth, partner);
+//
+//			try {
+//				String idType = Objects.nonNull(authRequestDTO.getIndividualIdType()) ? authRequestDTO.getIndividualIdType()
+//						: idTypeUtil.getIdType(authRequestDTO.getIndividualId()).getType();
+//						authRequestDTO.setIndividualIdType(idType);
+//				authRequestValidator.validateIdvId(authRequestDTO.getIndividualId(), idType, errors);
+//				if(AuthTypeUtil.isBio(authRequestDTO)) {
+//					kycReqValidator.validateDeviceDetails(authRequestDTO, errors);
+//				}
+//				DataValidationUtil.validate(errors);
+//				boolean externalAuthRequest = true;
+//				AuthResponseDTO authResponseDTO = kycFacade.authenticateIndividual(authRequestDTO, externalAuthRequest, partnerId,
+//								oidcClientId, requestWrapperWithMetadata, IdAuthCommonConstants.KYC_AUTH_CONSUME_VID_DEFAULT);
+//				KycAuthResponseDTO kycAuthResponseDTO = new KycAuthResponseDTO();
+//				Map<String, Object> metadata = requestWrapperWithMetadata.getMetadata();
+//				if (authResponseDTO != null &&
+//						metadata != null &&
+//								metadata.get(IdAuthCommonConstants.IDENTITY_DATA) != null &&
+//										metadata.get(IdAuthCommonConstants.IDENTITY_INFO) != null) {
+//					kycAuthResponseDTO = kycFacade.processKycAuth(authRequestDTO, authResponseDTO, partnerId, oidcClientId, metadata);
+//				}
+//				return kycAuthResponseDTO;
+//			} catch (IDDataValidationException e) {
+//				mosipLogger.error(IdAuthCommonConstants.SESSION_ID, this.getClass().getSimpleName(), "processKycAuth",
+//						e.getErrorTexts().isEmpty() ? "" : e.getErrorText());
+//
+//				auditHelper.auditExceptionForAuthRequestedModules(AuditEvents.KYC_REQUEST_RESPONSE, authRequestDTO, e);
+//				IdaRequestResponsConsumerUtil.setIdVersionToObjectWithMetadata(requestWrapperWithMetadata, e);
+//				e.putMetadata(IdAuthCommonConstants.TRANSACTION_ID, authRequestDTO.getTransactionID());
+//				throw authTransactionHelper.createDataValidationException(authTxnBuilder, e, requestWrapperWithMetadata);
+//			} catch (IdAuthenticationBusinessException e) {
+//				mosipLogger.error(IdAuthCommonConstants.SESSION_ID, this.getClass().getSimpleName(), "processKycAuth",
+//						e.getErrorTexts().isEmpty() ? "" : e.getErrorText());
+//
+//				if (IdAuthenticationErrorConstants.ID_NOT_AVAILABLE.getErrorCode().equals(e.getErrorCode())) {
+//					ondemandTemplateEventPublisher.notify(authRequestDTO, request.getHeader("signature"), partner, e,
+//							authRequestDTO.getMetadata());
+//				}
+//				auditHelper.auditExceptionForAuthRequestedModules(AuditEvents.KYC_REQUEST_RESPONSE, authRequestDTO, e);
+//				IdaRequestResponsConsumerUtil.setIdVersionToObjectWithMetadata(requestWrapperWithMetadata, e);
+//				e.putMetadata(IdAuthCommonConstants.TRANSACTION_ID, authRequestDTO.getTransactionID());
+//				throw authTransactionHelper.createUnableToProcessException(authTxnBuilder, e, requestWrapperWithMetadata);
+//			}
+//		} else {
+//			mosipLogger.error("Technical error. HttpServletRequest is not instanceof ObjectWithMetada.");
+//			throw new IdAuthenticationBusinessException(IdAuthenticationErrorConstants.UNABLE_TO_PROCESS);
+//		}
+//	}
+
+
 	@PostMapping(path = "/kyc-auth/delegated/{IdP-LK}/{Auth-Partner-ID}/{OIDC-Client-Id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Kyc Auth Request", description = "Kyc Auth Request", tags = { "kyc-auth-controller" })
 	@SecurityRequirement(name = "Authorization")
@@ -237,42 +301,44 @@ public class KycAuthController {
 			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public KycAuthResponseDTO processKycAuth(@Validated @RequestBody KycAuthRequestDTO authRequestDTO,
-			@ApiIgnore Errors errors, @PathVariable("IdP-LK") String mispLK, @PathVariable("Auth-Partner-ID") String partnerId,
-			@PathVariable("OIDC-Client-Id") String oidcClientId, HttpServletRequest request)
+											 @ApiIgnore Errors errors, @PathVariable("IdP-LK") String mispLK, @PathVariable("Auth-Partner-ID") String partnerId,
+											 @PathVariable("OIDC-Client-Id") String oidcClientId, HttpServletRequest request)
 			throws IdAuthenticationBusinessException, IdAuthenticationAppException, IdAuthenticationDaoException {
-		if(request instanceof ObjectWithMetadata) {
+		mosipLogger.info("Checking instance type of request: " + request.getClass().getName());
+
+		if(true) {
 			ObjectWithMetadata requestWrapperWithMetadata = (ObjectWithMetadata) request;
 
 			boolean isAuth = true;
 			Optional<PartnerDTO> partner = partnerService.getPartner(partnerId, authRequestDTO.getMetadata());
 			AuthTransactionBuilder authTxnBuilder = authTransactionHelper
 					.createAndSetAuthTxnBuilderMetadataToRequest(authRequestDTO, !isAuth, partner);
-			
+
 			try {
 				String idType = Objects.nonNull(authRequestDTO.getIndividualIdType()) ? authRequestDTO.getIndividualIdType()
 						: idTypeUtil.getIdType(authRequestDTO.getIndividualId()).getType();
-						authRequestDTO.setIndividualIdType(idType);
+				authRequestDTO.setIndividualIdType(idType);
 				authRequestValidator.validateIdvId(authRequestDTO.getIndividualId(), idType, errors);
 				if(AuthTypeUtil.isBio(authRequestDTO)) {
 					kycReqValidator.validateDeviceDetails(authRequestDTO, errors);
 				}
 				DataValidationUtil.validate(errors);
 				boolean externalAuthRequest = true;
-				AuthResponseDTO authResponseDTO = kycFacade.authenticateIndividual(authRequestDTO, externalAuthRequest, partnerId, 
-								oidcClientId, requestWrapperWithMetadata, IdAuthCommonConstants.KYC_AUTH_CONSUME_VID_DEFAULT);
+				AuthResponseDTO authResponseDTO = kycFacade.authenticateIndividual(authRequestDTO, externalAuthRequest, partnerId,
+						oidcClientId, requestWrapperWithMetadata, IdAuthCommonConstants.KYC_AUTH_CONSUME_VID_DEFAULT);
 				KycAuthResponseDTO kycAuthResponseDTO = new KycAuthResponseDTO();
 				Map<String, Object> metadata = requestWrapperWithMetadata.getMetadata();
-				if (authResponseDTO != null && 
-						metadata != null && 
-								metadata.get(IdAuthCommonConstants.IDENTITY_DATA) != null &&
-										metadata.get(IdAuthCommonConstants.IDENTITY_INFO) != null) {
+				if (authResponseDTO != null &&
+						metadata != null &&
+						metadata.get(IdAuthCommonConstants.IDENTITY_DATA) != null &&
+						metadata.get(IdAuthCommonConstants.IDENTITY_INFO) != null) {
 					kycAuthResponseDTO = kycFacade.processKycAuth(authRequestDTO, authResponseDTO, partnerId, oidcClientId, metadata);
 				}
 				return kycAuthResponseDTO;
 			} catch (IDDataValidationException e) {
 				mosipLogger.error(IdAuthCommonConstants.SESSION_ID, this.getClass().getSimpleName(), "processKycAuth",
 						e.getErrorTexts().isEmpty() ? "" : e.getErrorText());
-				
+
 				auditHelper.auditExceptionForAuthRequestedModules(AuditEvents.KYC_REQUEST_RESPONSE, authRequestDTO, e);
 				IdaRequestResponsConsumerUtil.setIdVersionToObjectWithMetadata(requestWrapperWithMetadata, e);
 				e.putMetadata(IdAuthCommonConstants.TRANSACTION_ID, authRequestDTO.getTransactionID());
@@ -280,7 +346,7 @@ public class KycAuthController {
 			} catch (IdAuthenticationBusinessException e) {
 				mosipLogger.error(IdAuthCommonConstants.SESSION_ID, this.getClass().getSimpleName(), "processKycAuth",
 						e.getErrorTexts().isEmpty() ? "" : e.getErrorText());
-				
+
 				if (IdAuthenticationErrorConstants.ID_NOT_AVAILABLE.getErrorCode().equals(e.getErrorCode())) {
 					ondemandTemplateEventPublisher.notify(authRequestDTO, request.getHeader("signature"), partner, e,
 							authRequestDTO.getMetadata());
@@ -295,6 +361,9 @@ public class KycAuthController {
 			throw new IdAuthenticationBusinessException(IdAuthenticationErrorConstants.UNABLE_TO_PROCESS);
 		}
 	}
+
+
+
 
 	/**
 	 * Controller Method for Kyc-exchange.

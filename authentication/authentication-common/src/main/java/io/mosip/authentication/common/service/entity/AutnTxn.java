@@ -134,18 +134,18 @@ public class AutnTxn {
 		this.requestSignature = requestSignature;
 		this.responseSignature = responseSignature;
 	}
-	
+
 	/**
 	 * The constructor used in retrieval of the specific fields.
-	 * 
+	 *
 	 * @param refId
 	 * @param uinHash
 	 */
 	public AutnTxn(String token, String refIdType, String entityId) {
 		this.token = token;
 		this.refIdType = refIdType;
-		this.entityId = entityId; 
+		this.entityId = entityId;
 	}
-	
-	
+
+
 }

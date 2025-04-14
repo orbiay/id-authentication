@@ -120,7 +120,7 @@ public abstract class BaseIDAFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-
+		// OUSSAMA
 		String reqUrl = ((HttpServletRequest) request).getRequestURL().toString();
 		if (reqUrl.contains("swagger") || reqUrl.contains("api-docs") || reqUrl.contains("actuator") || reqUrl.contains("callback")) {
 			chain.doFilter(request, response);
@@ -128,7 +128,7 @@ public abstract class BaseIDAFilter implements Filter {
 		}
 		mosipLogger.debug(IdAuthCommonConstants.SESSION_ID, EVENT_FILTER, BASE_IDA_FILTER,
 				"Request URL: " + reqUrl);
-		
+
 		LocalDateTime requestTime = DateUtils.getUTCCurrentDateTime();
 		mosipLogger.info(IdAuthCommonConstants.SESSION_ID, EVENT_FILTER, BASE_IDA_FILTER,
 				IdAuthCommonConstants.REQUEST + " at : " + requestTime);
@@ -145,7 +145,7 @@ public abstract class BaseIDAFilter implements Filter {
 				// super.flushBuffer();
 			}
 		};
-		
+
 		Map<String, Object> requestBody = null;
 		try {
 			requestBody = getRequestBody(requestWrapper.getInputStream());
@@ -157,10 +157,10 @@ public abstract class BaseIDAFilter implements Filter {
 				response.getWriter().write(responseAsString);
 				return;
 			}
-			
+
 			addIdAndVersionToRequestMetadata(requestWrapper);
 			addTransactionIdToRequestMetadata(requestWrapper,requestBody);
-			
+
 			requestWrapper.resetInputStream();
 			consumeRequest(requestWrapper, requestBody);
 			requestWrapper.resetInputStream();
@@ -180,7 +180,7 @@ public abstract class BaseIDAFilter implements Filter {
 		} finally {
 			logDataSize(responseWrapper.toString(), IdAuthCommonConstants.RESPONSE);
 		}
-		
+
 
 	}
 
@@ -338,6 +338,7 @@ public abstract class BaseIDAFilter implements Filter {
 	 */
 	protected void consumeRequest(ResettableStreamHttpServletRequest requestWrapper, Map<String, Object> requestBody)
 			throws IdAuthenticationAppException {
+		// OUSSAMA
 		try {
 			byte[] requestAsByte = IOUtils.toByteArray(requestWrapper.getInputStream());
 			logDataSize(new String(requestAsByte), IdAuthCommonConstants.REQUEST);
@@ -363,7 +364,6 @@ public abstract class BaseIDAFilter implements Filter {
 
 		String id = fetchId(requestWrapper, IdAuthConfigKeyConstants.MOSIP_IDA_API_ID);
 		requestWrapper.resetInputStream();
-		// OUSSAMA COMMENT THIS
 		if (Objects.nonNull(requestBody) && !requestBody.isEmpty()) {
 			validateId(requestBody, id);
 			validateVersion(requestBody);
@@ -412,6 +412,7 @@ public abstract class BaseIDAFilter implements Filter {
 				? (String) requestBody.get(IdAuthCommonConstants.ID)
 				: null;
 		String property = env.getProperty(id);
+		// OUSSAMA
 		if (StringUtils.isEmpty(idFromRequest)) {
 			handleException(IdAuthCommonConstants.ID, false);
 		}
